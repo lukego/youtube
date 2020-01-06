@@ -3,16 +3,21 @@
 mic=iec958:CARD=US1x2,DEV=0
 dslr=/dev/v4l/by-id/usb-VXIS_Inc_FHD_Capture-video-index0
 microscope=/dev/v4l/by-id/usb-Y1VATEK_HY-1139-video-index0
-webcam=/dev/v4l/by-id/usb-046d_HD_Pro_Webcam_C920_962E5F4F-video-index0
+topcam=/dev/v4l/by-id/usb-046d_HD_Pro_Webcam_C920_962E5F4F-video-index0
+frontcam=/dev/v4l/by-id/usb-046d_HD_Pro_Webcam_C920_464F35AF-video-index0
 
 ffmpeg \
-    -f video4linux2 -framerate 30 -video_size 1920x1080 -input_format mjpeg -i $dslr \
     -f video4linux2 -framerate 30 -video_size 1920x1080 -input_format h264 -i $microscope \
+    -f video4linux2 -framerate 30 -video_size 1920x1080 -input_format h264 -i $topcam \
+    -f video4linux2 -framerate 30 -video_size 1920x1080 -input_format h264 -i $frontcam \
     -f alsa -acodec pcm_s32le -i $mic \
     -f matroska \
     -map 0 \
     -map 1 \
-    -c:v copy \
-    -c:a copy \
+    -map 2 \
+    -c copy \
     x.mkv
+
+#    -f video4linux2 -framerate 30 -video_size 1920x1080 -input_format mjpeg -i $dslr \
+#    -map 3 \
 

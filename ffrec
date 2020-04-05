@@ -7,17 +7,18 @@ topcam=/dev/v4l/by-id/usb-046d_HD_Pro_Webcam_C920_962E5F4F-video-index0
 frontcam=/dev/v4l/by-id/usb-046d_HD_Pro_Webcam_C920_464F35AF-video-index0
 
 ffmpeg \
-    -f video4linux2 -framerate 30 -video_size 1920x1080 -input_format h264 -i $microscope \
-    -f video4linux2 -framerate 30 -video_size 1920x1080 -input_format h264 -i $topcam \
-    -f video4linux2 -framerate 30 -video_size 1920x1080 -input_format h264 -i $frontcam \
-    -f alsa -acodec pcm_s32le -i $mic \
+    -t 10 \
+    -loglevel debug \
+    -f video4linux2 -framerate 30 -video_size 1920x1080 -input_format mjpeg -i $microscope \
+    -f video4linux2 -framerate 30 -video_size 1920x1080 -input_format mjpeg -pix_fmt yuv420p -i $dslr \
+    -f video4linux2 -framerate 30 -video_size 1920x1080 -input_format mjpeg -i $topcam \
+    -f video4linux2 -framerate 30 -video_size 1920x1080 -input_format mjpeg -i $frontcam \
     -f matroska \
     -map 0 \
     -map 1 \
     -map 2 \
+    -map 3 \
     -c copy \
-    x.mkv
-
-#    -f video4linux2 -framerate 30 -video_size 1920x1080 -input_format mjpeg -i $dslr \
-#    -map 3 \
+    -vcodec copy \
+    $(uuidgen).mkv
 
